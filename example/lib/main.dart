@@ -21,19 +21,35 @@ class MyHome extends StatefulWidget {
 }
 
 class _MyHomeState extends State<MyHome> {
-  static final Map<String, String> genderMap = {
-    'male': 'Male',
-    'female': 'Female',
-    'other': 'Other',
-  };
+  final List<Gender> _genders = [
+    const Gender(
+      value: 'male',
+      label: 'Male',
+    ),
+    const Gender(
+      value: 'female',
+      label: 'Female',
+    ),
+    const Gender(
+      value: 'other',
+      label: 'Other',
+    ),
+  ];
 
-  String _selectedGender = genderMap.keys.first;
+  late Gender _selectedGender;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _selectedGender = _genders.first;
+  }
 
   @override
   Widget build(BuildContext context) {
-    final genderSelectionTile = new Material(
+    final genderSelectionTile = Material(
       color: Colors.transparent,
-      child: new Column(
+      child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           const Text('Select Gender',
@@ -44,10 +60,12 @@ class _MyHomeState extends State<MyHome> {
           const Padding(
             padding: EdgeInsets.only(bottom: 5.0),
           ),
-          CupertinoRadioChoice(
-              choices: genderMap,
-              onChange: onGenderSelected,
-              initialKeyValue: _selectedGender)
+          CupertinoRadioChoice<Gender>(
+            choices: _genders,
+            onChange: onGenderSelected,
+            initialValue: _selectedGender,
+            valueToString: (Gender value) => value.label,
+          )
         ],
       ),
     );
@@ -59,9 +77,19 @@ class _MyHomeState extends State<MyHome> {
     );
   }
 
-  void onGenderSelected(String genderKey) {
+  void onGenderSelected(Gender gender) {
     setState(() {
-      _selectedGender = genderKey;
+      _selectedGender = gender;
     });
   }
+}
+
+class Gender {
+  final String value;
+  final String label;
+
+  const Gender({
+    required this.value,
+    required this.label,
+  });
 }
