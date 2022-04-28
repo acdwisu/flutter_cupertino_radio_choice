@@ -12,6 +12,7 @@ class CupertinoRadioChoice<T> extends StatefulWidget {
       required this.initialValue,
       this.selectedColor = CupertinoColors.systemBlue,
       this.notSelectedColor = CupertinoColors.inactiveGray,
+      this.padding = const EdgeInsets.all(10.0),
       this.enabled = true});
 
   /// Function is called if the user selects another choice
@@ -36,6 +37,9 @@ class CupertinoRadioChoice<T> extends StatefulWidget {
   /// Value formatter
   final String Function(T) valueToString;
 
+  // Button padding
+  final EdgeInsets padding;
+
   @override
   _CupertinoRadioChoiceState createState() => _CupertinoRadioChoiceState<T>();
 }
@@ -57,21 +61,23 @@ class _CupertinoRadioChoiceState<T> extends State<CupertinoRadioChoice<T>> {
   Widget buildSelectionButton(T value,
       {bool selected = false}) {
     return Container(
-        child: CupertinoButton(
-            disabledColor:
-                selected ? widget.selectedColor : widget.notSelectedColor,
-            color: selected ? widget.selectedColor : widget.notSelectedColor,
-            padding: const EdgeInsets.all(10.0),
-            child: Text(widget.valueToString(value)),
-            onPressed: !widget.enabled || selected
-                ? null
-                : () {
-                    setState(() {
-                      _selectedValue = value;
-                    });
+      child: CupertinoButton(
+        disabledColor:
+            selected ? widget.selectedColor : widget.notSelectedColor,
+        color: selected ? widget.selectedColor : widget.notSelectedColor,
+        padding: widget.padding,
+        child: Text(widget.valueToString(value)),
+        onPressed: !widget.enabled || selected
+            ? null
+            : () {
+                setState(() {
+                  _selectedValue = value;
+                });
 
-                    widget.onChange(_selectedValue);
-                  }));
+                widget.onChange(_selectedValue);
+              },
+      )
+    );
   }
 
   @override
